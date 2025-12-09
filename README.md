@@ -1,3 +1,5 @@
+
+```text
 social/
 │
 ├── bin/ 
@@ -21,6 +23,7 @@ social/
 ├── docs/
 ├── scripts/
 └── web/ (optional)
+```
 
 /bin
 Chứa binary sau khi build (Go build → output vào đây).

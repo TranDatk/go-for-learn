@@ -1,0 +1,88 @@
+# ===========================
+# Go Build / Binary
+# ===========================
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Build directory
+/bin/
+/build/
+/dist/
+/tmp/
+/tmp/*
+
+# ===========================
+# Go Modules
+# ===========================
+# Module cache
+/pkg/mod/
+/pkg/sumdb/
+
+# Local build cache
+/.cache/
+/.go-build/
+
+# ===========================
+# Config / Secrets
+# ===========================
+.env
+.env.*
+*.env.local
+config.yaml
+config.yml
+*.local.json
+
+# ===========================
+# Logs
+# ===========================
+*.log
+logs/
+logs/*
+
+# ===========================
+# IDE / Editor
+# ===========================
+# VS Code
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Goland / IntelliJ
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# ===========================
+# Frontend (nếu có SPA)
+# ===========================
+node_modules/
+npm-debug.log
+yarn-error.log
+/dist/
+.build/
+
+# ===========================
+# Docker
+# ===========================
+/docker-data/
+/docker/*/data/
+/docker-compose.override.yml
+
+# ===========================
+# Misc
+# ===========================
+coverage.out
+*.coverprofile

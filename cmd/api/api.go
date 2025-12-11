@@ -7,14 +7,21 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	"social/internal/users/transport"
 )
 
 type application struct {
-	config config
+	config  config
+	handler handler
 }
 
 type config struct {
 	address string
+}
+
+type handler struct {
+	userHandler *transport.UserHandler
 }
 
 func (app *application) mount() *chi.Mux {
@@ -24,6 +31,11 @@ func (app *application) mount() *chi.Mux {
 
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthCheckHandler)
+
+		r.Route("/users", func(r chi.Router) {
+			r.Get("/{id}", app.handler.userHandler.Register)
+			r.Post("/", app.handler.userHandler.Register)
+		})
 	})
 
 	return r

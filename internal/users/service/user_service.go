@@ -3,14 +3,18 @@ package service
 import (
 	"context"
 	"fmt"
-	"social/internal/users/entity"
+	"social/internal/entity"
 	"social/internal/users/repository"
 	"social/pkg/helper"
 
 	"github.com/google/uuid"
 )
 
-func New(r repository.IUserRepository) *UserService {
+type UserService struct {
+	repo repository.IUserRepository
+}
+
+func NewUserService(r repository.IUserRepository) *UserService {
 	return &UserService{repo: r}
 }
 

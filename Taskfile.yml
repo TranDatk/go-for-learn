@@ -1,0 +1,92 @@
+version: '3'
+
+# Load environment variables from .env
+dotenv: ['.env']
+
+# Default environment variables for tasks
+env:
+  GO_ENV: development
+
+tasks:
+
+  # ------------------------
+  # Development / Server
+  # ------------------------
+
+  dev:
+    desc: "Run server using Air (hot reload)"
+    cmds:
+      - air
+
+  run:
+    desc: "Run app without Air"
+    cmds:
+      - go run ./cmd/app
+
+  build:
+    desc: "Build executable binary"
+    cmds:
+      - go build -o bin/app ./cmd/app
+
+
+  # ------------------------
+  # Migration Commands
+  # ------------------------
+
+  migrate:up:
+    desc: "Run all migrations"
+    cmds:
+      - goose -dir=./cmd/migrate/migrations postgres "$DB_ADDRESS" up
+
+  migrate:down:
+    desc: "Rollback last migration"
+    cmds:
+      - goose -dir=./cmd/migrate/migrations postgres "$DB_ADDRESS" down
+
+  migrate:reset:
+    desc: "Reset DB: migrate down -all & up again"
+    cmds:
+      - goose -dir=./cmd/migrate/migrations postgres "$DB_ADDRESS" down-to 0
+      - goose -dir=./cmd/migrate/migrations postgres "$DB_ADDRESS" up
+
+  migrate:status:
+    desc: "Show current migration status"
+    cmds:
+      - goose -dir=./cmd/migrate/migrations postgres "$DB_ADDRESS" status
+
+  migrate:create:
+    desc: "Create new migration file. Usage: task migrate:create name=add_users"
+    vars:
+      NAME: '{{.name}}'
+    cmds:
+      - goose create "{{.NAME}}" sql -dir=./cmd/migrate/migrations
+
+
+  # ------------------------
+  # Go Utilities
+  # ------------------------
+
+  fmt:
+    desc: "Format Go code"
+    cmds:
+      - go fmt ./...
+
+  tidy:
+    desc: "Sync go.mod"
+    cmds:
+      - go mod tidy
+
+  vet:
+    desc: "Run go vet"
+    cmds:
+      - go vet ./...
+
+  test:
+    desc: "Run all tests"
+    cmds:
+      - go test ./...
+
+  clean:
+    desc: "Clean build artifacts"
+    cmds:
+      - rm -rf bin/

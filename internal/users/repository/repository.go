@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"social/internal/users/entity"
+	"social/internal/entity"
 )
 
 type IUserRepository interface {

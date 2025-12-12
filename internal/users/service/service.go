@@ -2,13 +2,8 @@ package service
 
 import (
 	"context"
-	"social/internal/users/entity"
-	"social/internal/users/repository"
+	"social/internal/entity"
 )
-
-type UserService struct {
-	repo repository.IUserRepository
-}
 
 type IUserService interface {
 	Register(ctx context.Context, u *entity.User) error

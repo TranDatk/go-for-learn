@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	db "social/internal/database"
 	"social/internal/users/repository"
 	"social/internal/users/service"
 	"social/internal/users/transport"
@@ -10,13 +12,34 @@ import (
 
 func main() {
 	cfg := config{
-		address: env.Get("SERVER_ADDRESS", ":8080"),
+		addr: env.Get("SERVER_ADDRESS", ":8080"),
+		db: dbConfig{
+			addr:         env.Get("DB_ADDRESS", ""),
+			maxOpenConns: env.Get("DB_MAX_CONNS", 30),
+			maxIdleConns: env.Get("DB_MAX_IDLE_CONNS", 30),
+			maxIdleTime:  env.Get("DB_MAX_IDLE_TIME", "5m"),
+		},
 	}
 
+	db, err := db.New(
+		"postgres",
+		cfg.db.addr,
+		cfg.db.maxOpenConns,
+		cfg.db.maxIdleConns,
+		cfg.db.maxIdleTime,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	fmt.Println("Database connection pool established")
+
 	handler := handler{
-		userHandler: transport.NewHandler(
-			service.New(
-				repository.NewMemory(),
+		userHandler: transport.NewUserHandler(
+			service.NewUserService(
+				repository.NewPostgres(db),
 			),
 		),
 	}

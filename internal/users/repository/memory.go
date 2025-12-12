@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"social/internal/users/entity"
+	"social/internal/entity"
 	"sync"
 )
 

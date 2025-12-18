@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	db "social/internal/database"
-	"social/internal/users/repository"
-	"social/internal/users/service"
-	"social/internal/users/transport"
+	postRepository "social/internal/posts/repository"
+	postService "social/internal/posts/service"
+	postTransport "social/internal/posts/transport"
+	userRepository "social/internal/users/repository"
+	userService "social/internal/users/service"
+	userTransport "social/internal/users/transport"
 	"social/pkg/env"
 )
 
@@ -37,9 +40,14 @@ func main() {
 	fmt.Println("Database connection pool established")
 
 	handler := handler{
-		userHandler: transport.NewUserHandler(
-			service.NewUserService(
-				repository.NewPostgres(db),
+		userHandler: userTransport.NewUserHandler(
+			userService.NewUserService(
+				userRepository.NewPostgres(db),
+			),
+		),
+		postHandler: postTransport.NewPostHandler(
+			postService.NewPostService(
+				postRepository.NewPostgres(db),
 			),
 		),
 	}

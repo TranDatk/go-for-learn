@@ -22,22 +22,33 @@ func (s *PostService) CreatePost(ctx context.Context, p *entity.Post) error {
 	id, err := uuid.NewV7()
 
 	if err != nil {
-		return fmt.Errorf("generate uuid: %w", err)
+		return fmt.Errorf("Generate uuid: %w", err)
 	}
 
 	p.ID = id
 
 	if err := s.repo.Create(ctx, p); err != nil {
-		return helper.NewRequestError("repo create post", err)
+		return helper.NewCustomError(err, "Create post failed", nil)
 	}
 
 	return nil
 }
 
 func (s *PostService) GetAllPost(ctx context.Context) (*[]entity.Post, error) {
-	return s.repo.GetAll(ctx)
+	posts, err := s.repo.GetAll(ctx)
+
+	if err != nil {
+		return nil, helper.NewCustomError(err, "Get all post failed", nil)
+	}
+	return posts, nil
 }
 
 func (s *PostService) GetPostByID(ctx context.Context, id string) (*entity.Post, error) {
-	return s.repo.GetByID(ctx, id)
+	post, err := s.repo.GetByID(ctx, id)
+
+	if err != nil {
+		return nil, helper.NewCustomError(err, "Get post failed", nil)
+	}
+
+	return post, nil
 }

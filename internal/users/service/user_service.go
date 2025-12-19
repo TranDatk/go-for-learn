@@ -19,17 +19,16 @@ func NewUserService(r repository.IUserRepository) *UserService {
 }
 
 func (s *UserService) Register(ctx context.Context, u *entity.User) error {
-
 	id, err := uuid.NewV7()
 
 	if err != nil {
-		return fmt.Errorf("generate uuid: %w", err)
+		return fmt.Errorf("generate uuid failed: %w", err)
 	}
 
 	u.ID = id
 
 	if err := s.repo.Create(ctx, u); err != nil {
-		return helper.NewRequestError("repo create user", err)
+		return helper.NewCustomError(err, "repo create user failed", nil)
 	}
 
 	return nil

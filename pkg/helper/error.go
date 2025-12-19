@@ -1,26 +1,30 @@
 package helper
 
-import "fmt"
+import (
+	"fmt"
+)
 
-type RequestError struct {
-	Msg   string
-	Cause error
+type CustomError struct {
+	cause   error
+	message string
+	details any
 }
 
-func (e *RequestError) Error() string {
-	if e.Cause != nil {
-		return fmt.Sprintf("%s: %v", e.Msg, e.Cause)
+func (e *CustomError) Error() string {
+	if e.cause != nil {
+		return fmt.Sprintf("%s: %v", e.message, e.cause)
 	}
-	return e.Msg
+	return e.message
 }
 
-func (e *RequestError) Unwrap() error {
-	return e.Cause
+func (e *CustomError) Unwrap() error {
+	return e.cause
 }
 
-func NewRequestError(msg string, cause error) error {
-	return &RequestError{
-		Msg:   msg,
-		Cause: cause,
+func NewCustomError(cause error, msg string, dt any) error {
+	return &CustomError{
+		cause:   cause,
+		message: msg,
+		details: dt,
 	}
 }

@@ -16,35 +16,38 @@ func NewPostHandler(svc service.IPostService) *PostHandler {
 	return &PostHandler{svc: svc}
 }
 
-func (h *PostHandler) NewPostService(w http.ResponseWriter, req *http.Request) {
-	var payload entity.CreatePostPayload
+func (h *PostHandler) GetPost(w http.ResponseWriter, req *http.Request) {
+	param := req.PathValue("id")
 
-	if err := helper.ReadJSON(w, req, &payload); err != nil {
-		helper.WriteErrorJson(w, http.StatusBadRequest, err.Error())
+	ctx := req.Context()
+
+	post, err := h.svc.GetPostByID(ctx, param)
+
+	if err != nil {
+		helper.WriteErrorJson(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	if err := validator.Validate.Struct(payload); err != nil {
-		helper.WriteErrorJson(
-			w,
-			http.StatusBadRequest,
-			validator.Format(err),
-		)
+	helper.WriteJson(w, http.StatusOK, post)
+}
+
+func (h *PostHandler) NewPost(w http.ResponseWriter, req *http.Request) {
+	var payload entity.CreatePostPayload
+
+	if !validator.PayloadValidator(w, req, &payload) {
 		return
 	}
 
 	post := entity.Post{
 		Title:   payload.Title,
 		Content: payload.Content,
-		UserID:  payload.UserID,
 		Tags:    payload.Tags,
 	}
 
 	ctx := req.Context()
 
 	if err := h.svc.CreatePost(ctx, &post); err != nil {
-		helper.WriteErrorJson(w, http.StatusInternalServerError, err.Error())
+		helper.WriteErrorJson(w, http.StatusInternalServerError, err)
 		return
 	}
-
 }

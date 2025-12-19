@@ -48,8 +48,8 @@ func (app *application) mount() *chi.Mux {
 		})
 
 		r.Route("/posts", func(r chi.Router) {
-			r.Get("/{id}", app.handler.postHandler.NewPostService)
-			r.Post("/", app.handler.postHandler.NewPostService)
+			r.Get("/{id}", app.handler.postHandler.GetPost)
+			r.Post("/", app.handler.postHandler.NewPost)
 		})
 	})
 

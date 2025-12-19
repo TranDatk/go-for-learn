@@ -17,8 +17,7 @@ type Post struct {
 }
 
 type CreatePostPayload struct {
-	Title   string    `json:"title" validate:"required,min=3,max=200"`
-	Content string    `json:"content" validate:"required"`
-	UserID  uuid.UUID `json:"user_id" validate:"required,gt=0"`
-	Tags    []string  `json:"tags" validate:"omitempty,dive,min=1"`
+	Title   string   `json:"title" validate:"required,min=3,max=200"`
+	Content string   `json:"content" validate:"required,min=3,max=10000"`
+	Tags    []string `json:"tags" validate:"omitempty,dive,min=1"`
 }
